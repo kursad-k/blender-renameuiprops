@@ -1,3 +1,6 @@
+from bpy.props import FloatVectorProperty, StringProperty
+from bpy.types import Operator
+import bpy
 bl_info = {
     "name": "Rename UI Properties",
     "author": "Kursad Karatas",
@@ -10,14 +13,9 @@ bl_info = {
 }
 
 
-import bpy
-from bpy.types import Operator
-from bpy.props import FloatVectorProperty,StringProperty
-
-
 def rename_vertex_group(self, context):
-  
- context.object.vertex_groups.active.name=self.vgrpname
+    context.object.vertex_groups.active.name = self.vgrpname
+
 
 class OBJECT_OT_RenameVertexGroup(Operator):
     """Rename the active vertex group"""
@@ -25,27 +23,25 @@ class OBJECT_OT_RenameVertexGroup(Operator):
     bl_label = "Rename the current vertex group"
     bl_options = {'REGISTER', 'UNDO'}
 
-    vgrpname: StringProperty(name="vgrpname",default="")
+    vgrpname: StringProperty(name="vgrpname", default="")
 
     def execute(self, context):
         rename_vertex_group(self, context)
 
         return {'FINISHED'}
 
-
     def invoke(self, context, event):
-       
+
         wm = context.window_manager
-        self.vgrpname=context.object.vertex_groups.active.name
+        self.vgrpname = context.object.vertex_groups.active.name
 
-        return wm.invoke_props_dialog( self )
-
+        return wm.invoke_props_dialog(self)
 
 
 def menu_draw(self, context):
     self.layout.separator()
+    self.layout.operator(OBJECT_OT_RenameVertexGroup.bl_idname, text="Rename")
 
-    self.layout.operator(OBJECT_OT_RenameVertexGroup.bl_idname,text="Rename")
 
 def register():
     bpy.utils.register_class(OBJECT_OT_RenameVertexGroup)
